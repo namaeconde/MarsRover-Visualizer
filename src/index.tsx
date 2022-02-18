@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { darkTheme } from './theme';
 
@@ -11,8 +10,7 @@ import { darkTheme } from './theme';
  */
 ReactDOM.render(
   <React.StrictMode>
-  <ThemeProvider theme={darkTheme}>
-    <CssBaseline />
+  <ThemeProvider theme={darkTheme}>    
     <App/>
   </ThemeProvider>
   </React.StrictMode>,
