@@ -3,8 +3,9 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import brown from '@mui/material/colors/brown';
 import ElectricCarIcon from '@mui/icons-material/ElectricCar';
+import { Plateau } from '../domain/Plateau';
 
-const Terrain = ({ width, height }: any) => {
+const Terrain = (plateau: Plateau) => {
   const Block = ({ hasRover }: any) => {
     return (
       <Paper 
@@ -31,7 +32,7 @@ const Terrain = ({ width, height }: any) => {
     return (
       <Box display="flex" sx={{ flexDirection: "row" }}>
         {
-          new Array(width).fill(null).map(() => {
+          new Array(plateau.width).fill(null).map(() => {
             return <Block />
           })
         }
@@ -51,7 +52,7 @@ const Terrain = ({ width, height }: any) => {
         <Grid item xs={3}>
           <Box>
             {
-              new Array(height).fill(null).map(() => {
+              new Array(plateau.height).fill(null).map(() => {
                 return <Row />
               })
             }
