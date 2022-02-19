@@ -5,7 +5,9 @@ import brown from '@mui/material/colors/brown';
 import ElectricCarIcon from '@mui/icons-material/ElectricCar';
 import { Plateau } from '../domain/Plateau';
 
-const Terrain = (plateau: Plateau) => {
+const Terrain = ({ width, height }: any) => {
+  let plateau = new Plateau(width, height)
+  
   const Block = ({ hasRover }: any) => {
     return (
       <Paper 
