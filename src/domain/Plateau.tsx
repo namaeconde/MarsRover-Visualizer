@@ -1,9 +1,10 @@
 /**
  * Plateau on mars in a rectangular shape.
  */
- import { Point, Rover } from "./Rover";
+ import Rover from "./Rover";
+ import Point from "./Point";
 
- export class Plateau {
+ class Plateau {
      width: number;
      height: number;
      rovers: Rover[];
@@ -26,3 +27,5 @@
          })
      }
  }
+
+ export default Plateau;

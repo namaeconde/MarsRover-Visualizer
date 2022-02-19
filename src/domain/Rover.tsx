@@ -6,27 +6,12 @@
  * 'L' and 'R' makes the rover spin 90 degrees left or right respectively, without moving from its current spot.
  * 'M' means move forward one grid point, and maintain the same heading.
  */
- import { Plateau } from "./Plateau";
-
- export type Point = {
-     x: number;
-     y: number;
- };
+ import Plateau from "./Plateau";
+ import Point from "./Point";
+ import Orientation from "./Orientation";
+ import Instruction from "./Instruction";
  
- export enum Orientation {
-     N = "N",
-     E = "E",
-     W = "W",
-     S = "S",
- }
- 
- export enum Instruction {
-     L = "L",
-     R = "R",
-     M = "M",
- }
- 
- export class Rover {
+ class Rover {
      name: string;
      position!: Point;
      orientation!: Orientation;
@@ -182,3 +167,5 @@
          return !!(this.position && this.orientation);
      }
  }
+
+ export default Rover;

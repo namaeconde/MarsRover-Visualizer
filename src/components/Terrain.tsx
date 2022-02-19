@@ -3,12 +3,23 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import brown from '@mui/material/colors/brown';
 import ElectricCarIcon from '@mui/icons-material/ElectricCar';
-import { Plateau } from '../domain/Plateau';
+import Plateau from '../domain/Plateau';
+import Orientation from '../domain/Orientation';
+import Rover from '../domain/Rover';
+import Point from '../domain/Point';
 
 const Terrain = ({ width, height }: any) => {
-  let plateau = new Plateau(width, height)
-  
-  const Block = ({ hasRover }: any) => {
+  let plateau = new Plateau(width, height);
+
+  // SAMPLE ONLY TO TEST TERRAIN ROVER INDICATOR
+  const name = "Mars Rover";
+  const landing = { position: {x: 0, y:0}, orientation: Orientation.N };
+  const marsRover = new Rover(name, landing, []);
+  marsRover.landOn(plateau);
+
+  const Block = ({ coordinates }: any) => {
+    const { x, y } = coordinates
+
     return (
       <Paper 
         sx={{
@@ -23,19 +34,17 @@ const Terrain = ({ width, height }: any) => {
         elevation={3}
         square
       >
-        {
-          hasRover && <ElectricCarIcon />
-        }  
+        { plateau.hasRoverAt({x: x, y: y} as Point) && <ElectricCarIcon /> }
       </Paper>
     )
   }
 
-  const Row = () => {
+  const Row = ({ y }: any) => {
     return (
       <Box display="flex" sx={{ flexDirection: "row" }}>
         {
-          new Array(plateau.width).fill(null).map(() => {
-            return <Block />
+          new Array(plateau.width).fill(null).map((value, index) => {
+            return <Block coordinates={{x: index, y: y}}/>
           })
         }
       </Box>
@@ -54,8 +63,8 @@ const Terrain = ({ width, height }: any) => {
         <Grid item xs={3}>
           <Box>
             {
-              new Array(plateau.height).fill(null).map(() => {
-                return <Row />
+              new Array(plateau.height).fill(null).map((value, index) => {
+                return <Row y={index} />
               })
             }
           </Box>
