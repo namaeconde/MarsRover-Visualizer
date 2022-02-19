@@ -4,10 +4,28 @@ import Grid from '@mui/material/Grid';
 import brown from '@mui/material/colors/brown';
 import NavigationIcon from '@mui/icons-material/Navigation';
 import Point from '../domain/Point';
+import Orientation from '../domain/Orientation';
+
+
+const { N, S, E, W } = Orientation;
+
+const transformNavigationIcon = (orientation: Orientation) => {
+  switch(orientation) {
+    case S:
+      return "rotate(180deg)";
+    case E:
+      return "rotate(90deg)";
+    case W:
+      return "rotate(-90deg)";
+    default:
+      return "";
+  }
+}
 
 const Terrain = ({ plateau }: any) => {
   const Block = ({ coordinates }: any) => {
     const { x, y } = coordinates
+    const rover = plateau.getRoverAt({x: x, y: y} as Point);
 
     return (
       <Paper 
@@ -23,7 +41,7 @@ const Terrain = ({ plateau }: any) => {
         elevation={3}
         square
       >
-        { plateau.hasRoverAt({x: x, y: y} as Point) && <NavigationIcon /> }
+        { rover && <NavigationIcon sx={{ transform: transformNavigationIcon(rover.orientation as Orientation) }} /> }
       </Paper>
     )
   }

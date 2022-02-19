@@ -26,6 +26,17 @@
                  position.y === roverPosition.y
          })
      }
+
+     getRoverAt(position: Point): Rover {
+      for (let rover of this.rovers) {
+        let roverPosition = rover.position;
+        if (position.x === roverPosition.x &&
+          position.y === roverPosition.y) {
+          return rover;
+        }
+      }
+      return null as any;
+     }
  }
 
  export default Plateau;
