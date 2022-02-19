@@ -2,7 +2,7 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import brown from '@mui/material/colors/brown';
-import ElectricCarIcon from '@mui/icons-material/ElectricCar';
+import NavigationIcon from '@mui/icons-material/Navigation';
 import Point from '../domain/Point';
 
 const Terrain = ({ plateau }: any) => {
@@ -23,7 +23,7 @@ const Terrain = ({ plateau }: any) => {
         elevation={3}
         square
       >
-        { plateau.hasRoverAt({x: x, y: y} as Point) && <ElectricCarIcon /> }
+        { plateau.hasRoverAt({x: x, y: y} as Point) && <NavigationIcon /> }
       </Paper>
     )
   }
