@@ -4,11 +4,22 @@ import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Terrain from './components/Terrain';
+import Plateau from './domain/Plateau';
+import Orientation from './domain/Orientation';
+import Rover from './domain/Rover';
 
 const DEFAULT_WIDTH = 5
 const DEFAULT_HEIGHT = 5
 
 const App = () => {
+  let plateau = new Plateau(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+
+    // SAMPLE ONLY TO TEST TERRAIN ROVER INDICATOR
+    const name = "Mars Rover";
+    const landing = { position: {x: 0, y:0}, orientation: Orientation.N };
+    const marsRover = new Rover(name, landing, []);
+    marsRover.landOn(plateau);
+
   return (
     <>
       <CssBaseline />
@@ -25,7 +36,7 @@ const App = () => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Terrain width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} />
+      <Terrain plateau={plateau} />
     </>
   );
 }

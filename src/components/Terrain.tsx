@@ -3,20 +3,9 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import brown from '@mui/material/colors/brown';
 import ElectricCarIcon from '@mui/icons-material/ElectricCar';
-import Plateau from '../domain/Plateau';
-import Orientation from '../domain/Orientation';
-import Rover from '../domain/Rover';
 import Point from '../domain/Point';
 
-const Terrain = ({ width, height }: any) => {
-  let plateau = new Plateau(width, height);
-
-  // SAMPLE ONLY TO TEST TERRAIN ROVER INDICATOR
-  const name = "Mars Rover";
-  const landing = { position: {x: 0, y:0}, orientation: Orientation.N };
-  const marsRover = new Rover(name, landing, []);
-  marsRover.landOn(plateau);
-
+const Terrain = ({ plateau }: any) => {
   const Block = ({ coordinates }: any) => {
     const { x, y } = coordinates
 
@@ -43,8 +32,8 @@ const Terrain = ({ width, height }: any) => {
     return (
       <Box display="flex" sx={{ flexDirection: "row" }}>
         {
-          new Array(plateau.width).fill(null).map((value, index) => {
-            return <Block coordinates={{x: index, y: y}}/>
+          new Array(plateau.width).fill(null).map((_, index) => {
+            return <Block key={index} coordinates={{x: index, y: y}}/>
           })
         }
       </Box>
@@ -63,8 +52,8 @@ const Terrain = ({ width, height }: any) => {
         <Grid item xs={3}>
           <Box>
             {
-              new Array(plateau.height).fill(null).map((value, index) => {
-                return <Row y={index} />
+              new Array(plateau.height).fill(null).map((_, index) => {
+                return <Row key={index} y={index} />
               })
             }
           </Box>
