@@ -47,7 +47,7 @@ const Terrain = ({ plateau }: any) => {
         direction="column"
         alignItems="center"
         justifyContent="center"
-        style={{ minHeight: '90vh' }}
+        style={{ minHeight: '85vh' }}
       >
         <Grid item xs={3}>
           <Box>
