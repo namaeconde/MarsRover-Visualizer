@@ -15,7 +15,7 @@ const Terrain = ({ plateau }: any) => {
           m: 0.2,
           width: 30,
           height: 30,
-          backgroundColor: brown[500],
+          backgroundColor: brown[300],
           display: "flex",
           alignItems: "center",
           justifyContent: "center"
@@ -47,7 +47,7 @@ const Terrain = ({ plateau }: any) => {
         direction="column"
         alignItems="center"
         justifyContent="center"
-        style={{ minHeight: '85vh' }}
+        style={{ minHeight: '80vh' }}
       >
         <Grid item xs={3}>
           <Box>
