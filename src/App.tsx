@@ -11,6 +11,7 @@ import Orientation from './domain/Orientation';
 import Rover from './domain/Rover';
 import Typography from '@mui/material/Typography';
 import Fab from '@mui/material/Fab';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 import NavigationIcon from '@mui/icons-material/Navigation';
 import Tooltip from '@mui/material/Tooltip';
 import Dialog from '@mui/material/Dialog';
@@ -39,7 +40,7 @@ const App = () => {
   const [width, setWidth] = useState(DEFAULT_WIDTH);
   const [height, setHeight] = useState(DEFAULT_HEIGHT);
   const [plateau, setPlateau] = useState(new Plateau(DEFAULT_WIDTH, DEFAULT_HEIGHT));
-
+  
   const handleWidthChange = (event: Event, newValue: number | number[]) => {
     setWidth(newValue as number);
     setPlateau(new Plateau(newValue as number, height));
@@ -58,6 +59,7 @@ const App = () => {
   const handleDialogClose = () => setDialogOpen(false);
 
   // Rover Landing Properties
+  const [rover, setRover] = useState<Rover>(null as any);
   const [name, setName] = useState<string>('');
   const [xCoord, setXCoord] = useState<number>(0);
   const [yCoord, setYCoord] = useState<number>(0);
@@ -91,8 +93,9 @@ const App = () => {
   const deployRover = () => {
     try {
       const landing = { position: landingCoordinates, orientation: orientation };
-      const rover = new Rover(name, landing, []);
-      rover.landOn(plateau);
+      const newRover = new Rover(name, landing, instructions.split(""));
+      setRover(newRover);
+      newRover.landOn(plateau);
       handleDialogClose();
       clearRoverInputs();
     } catch(error) {
@@ -102,6 +105,14 @@ const App = () => {
     }
   }
 
+  const runRover = () => {
+    rover?.navigateOn(plateau);
+    const newRoverStatus = new Rover(rover.name, rover.landing, []);
+    newRoverStatus.position = rover.position;
+    newRoverStatus.orientation = rover.orientation;
+    setRover(newRoverStatus);
+  }
+
   const clearRoverInputs = () => {
     setName('');
     setXCoord(0);
@@ -109,6 +120,7 @@ const App = () => {
     setLandingCoordinates({x: 0, y: 0} as Point);
     setOrientation(N);
     setErrorMessage('');
+    setInstructions('');
   }
 
   return (
@@ -148,10 +160,15 @@ const App = () => {
           </Box>
         </Container>
       </AppBar>
-      <Terrain plateau={plateau} />
+      <Terrain plateau={plateau} rover={rover}/>
       <Tooltip title="Deploy rover">
-        <Fab color="primary" sx={{ position: 'fixed', bottom: 20, right: 20 }} onClick={handleDialogOpen}>
-          <NavigationIcon />
+        <Fab color="primary" 
+          sx={{ position: 'fixed', bottom: 20, right: 20 }} 
+          onClick={ rover === null ? handleDialogOpen : runRover }>
+          {
+            // TODO: Update to handle rover retrieval after navigation
+            rover === null ? <MyLocationIcon /> : <NavigationIcon /> 
+          }
         </Fab>
       </Tooltip>
       <Dialog disableEscapeKeyDown open={dialogOpen} onClose={handleDialogClose}>

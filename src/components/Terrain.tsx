@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import brown from '@mui/material/colors/brown';
 import NavigationIcon from '@mui/icons-material/Navigation';
-import Point from '../domain/Point';
 import Orientation from '../domain/Orientation';
 import { Transition } from 'react-transition-group';
 
@@ -25,16 +24,15 @@ const transformNavigationIcon = (orientation: Orientation) => {
   }
 }
 
-const Terrain = ({ plateau }: any) => {
+const Terrain = ({ plateau, rover }: any) => {
 
-  const Block = ({ coordinates }: any) => {
-    const { x, y } = coordinates
+  const Block = ({ roverOrientation }: any) => {
     const nodeRef = useRef(null);
-    const rover = plateau.getRoverAt({x: x, y: y} as Point);
+
     const [animate, setAnimate] = useState(false);
 
-    const duration = 3000;
-    const navIconOrientation = transformNavigationIcon(rover?.orientation)
+    const duration = 2000;
+    const navIconOrientation = transformNavigationIcon(roverOrientation)
     const defaultStyle = {
       transition: `transform ${duration}ms ease-in-out`,
       transform: NAVICON_DEFAULT_ORIENTATION,
@@ -49,10 +47,10 @@ const Terrain = ({ plateau }: any) => {
     };
 
     useEffect(() => {
-      if (rover) {
+      if (roverOrientation) {
         setAnimate(true);
       }
-    }, [rover])
+    }, [roverOrientation])
 
     return (
       <Paper 
@@ -68,7 +66,7 @@ const Terrain = ({ plateau }: any) => {
         elevation={3}
         square
       >
-        { rover && 
+        { roverOrientation && 
           <Transition
             in={animate} 
             timeout={duration}
@@ -96,7 +94,10 @@ const Terrain = ({ plateau }: any) => {
       <Box display="flex" sx={{ flexDirection: "row" }}>
         {
           new Array(plateau.width).fill(null).map((_, index) => {
-            return <Block key={index} coordinates={{x: index, y: y}}/>
+            const hasRover = index === rover?.position?.x && y === rover?.position?.y
+            return <Block key={index} 
+                    roverOrientation={ hasRover ? rover.orientation : null }
+                    />
           })
         }
       </Box>
@@ -116,7 +117,7 @@ const Terrain = ({ plateau }: any) => {
           <Box>
             {
               new Array(plateau.height).fill(null).map((_, index) => {
-                return <Row key={index} y={index} />
+                return <Row key={index} y={plateau.height - index -1} />
               })
             }
           </Box>
