@@ -63,6 +63,7 @@ const App = () => {
   const [yCoord, setYCoord] = useState<number>(0);
   const [orientation, setOrientation] = useState<Orientation>(N);
   const [landingCoordinates, setLandingCoordinates] = useState<Point>({x:0, y:0});
+  const [instructions, setInstructions] = useState<string>('');
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     let newName = event.target.value || '';
     setName(newName);
@@ -80,6 +81,10 @@ const App = () => {
   const handleOrientationChange = (event: SelectChangeEvent<typeof orientation>) => {
     let newOrientation = event.target.value
     setOrientation(newOrientation as Orientation);
+  };
+  const handleInstructionsChange = (event: ChangeEvent<HTMLInputElement>) => {
+    let newInstructions = event.target.value || '';
+    setInstructions(newInstructions);
   };
 
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -225,6 +230,15 @@ const App = () => {
                 }
               </Select>
             </FormControl>
+          </Box>
+          <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', alignItems:"center" }}>
+            <FormControl sx={{ m: 1}} fullWidth>
+                <TextField
+                  label="Navigation Instructions"
+                  value={instructions}
+                  onChange={handleInstructionsChange}
+                />
+              </FormControl>
           </Box>
         </DialogContent>
         <DialogActions>
