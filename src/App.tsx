@@ -233,12 +233,15 @@ const App = () => {
           </Box>
           <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', alignItems:"center" }}>
             <FormControl sx={{ m: 1}} fullWidth>
+              <Typography variant='caption' sx={{ m:1 }}>Valid instructions: L (turn left), R (turn right), M (forward)</Typography>
+              <Tooltip title="Instructions should have no spaces">
                 <TextField
                   label="Navigation Instructions"
                   value={instructions}
                   onChange={handleInstructionsChange}
                 />
-              </FormControl>
+              </Tooltip>
+            </FormControl>
           </Box>
         </DialogContent>
         <DialogActions>
