@@ -26,10 +26,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Point from './domain/Point';
 import TextField from '@mui/material/TextField';
-import Alert from '@mui/material/Alert';
-import IconButton from '@mui/material/IconButton';
+import Alert, { AlertColor } from '@mui/material/Alert';
 import Collapse from '@mui/material/Collapse';
-import CloseIcon from '@mui/icons-material/Close';
+import SendIcon from '@mui/icons-material/Send';
 import Instruction from './domain/Instruction';
 
 const DEFAULT_WIDTH = 5
@@ -90,7 +89,7 @@ const App = () => {
     setInstructions(newInstructions);
   };
 
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [notification, setNotification] = useState({ type: "success", message: "" });
   const deployRover = () => {
     try {
       const landing = { position: landingCoordinates, orientation: orientation };
@@ -98,10 +97,9 @@ const App = () => {
       newRover.landOn(plateau);
       setRover(newRover);
       handleDialogClose();
-      clearRoverInputs();
     } catch(error) {
       console.log((error as Error).message);
-      setErrorMessage((error as Error).message)
+      setNotification({ type: "error", message: (error as Error).message })
       setAlertOpen(true);
     }
   }
@@ -113,14 +111,18 @@ const App = () => {
         try {
           rover.execute(instruction as Instruction, plateau);
           setRover({...rover} as Rover);
+          if (idx === rover.instructions.length-1) {
+            setTimeout(() => {
+              setNotification({ type: "success", message: "Mars mission successful. New data saved." })
+              setAlertOpen(true);
+            }, idx+1*1000)
+          }
         } catch(error) {
           console.log((error as Error).message);
-          setErrorMessage((error as Error).message)
+          setNotification({ type: "error", message: (error as Error).message })
           setAlertOpen(true);
         }
-      }, idx * 1000);
-
-      return rover.getStatus()
+      }, idx*1000);
     });
   }
 
@@ -130,8 +132,10 @@ const App = () => {
     setYCoord(0);
     setLandingCoordinates({x: 0, y: 0} as Point);
     setOrientation(N);
-    setErrorMessage('');
+    setNotification({ type: "success", message: "" })
     setInstructions('');
+    setRover(null as any);
+    setPlateau(new Plateau(width, height));
   }
 
   return (
@@ -172,26 +176,29 @@ const App = () => {
         </Container>
       </AppBar>
       <Box sx={{ width: '100%' }}>
-          <Collapse in={alertOpen}>
-            <Alert
-              severity="error"
-              action={
-                <IconButton
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setAlertOpen(false);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-              sx={{ mb: 2 }}
-            >
-              {errorMessage}
-            </Alert>
-          </Collapse>
-        </Box>
+        <Collapse in={alertOpen}>
+          <Alert
+            severity={notification.type as AlertColor}
+            action={
+              <Button 
+                variant="outlined" 
+                endIcon={<SendIcon />}
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setAlertOpen(false);
+                  clearRoverInputs();
+                }}
+              >
+                Report to base
+              </Button>
+            }
+            sx={{ mb: 2 }}
+          >
+            {notification.message}
+          </Alert>
+        </Collapse>
+      </Box>
       <Terrain plateau={plateau} rover={rover}/>
       <Tooltip title={ rover == null ? "Deploy rover" : "Run rover run!"}>
         <Fab color="primary" 
