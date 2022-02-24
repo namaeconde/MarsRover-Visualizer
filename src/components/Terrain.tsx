@@ -6,7 +6,7 @@ import Rover from './Rover';
 
 const Terrain = ({ plateau, rover }: any) => {
 
-  const Block = ({ roverOrientation }: any) => {
+  const Block = ({ rover }: any) => {
 
     return (
       <Paper 
@@ -22,7 +22,9 @@ const Terrain = ({ plateau, rover }: any) => {
         elevation={3}
         square
       >
-        { roverOrientation && <Rover roverOrientation={roverOrientation}/> }
+        { rover && 
+          <Rover rover={rover}/> 
+        }
       </Paper>
     )
   }
@@ -33,9 +35,7 @@ const Terrain = ({ plateau, rover }: any) => {
         {
           new Array(plateau.width).fill(null).map((_, index) => {
             const hasRover = index === rover?.position?.x && y === rover?.position?.y
-            return <Block key={index} 
-                    roverOrientation={ hasRover ? rover.orientation : null }
-                    />
+            return <Block key={index} rover={ hasRover ? rover : null }/>
           })
         }
       </Box>

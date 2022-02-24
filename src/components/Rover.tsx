@@ -4,7 +4,6 @@ import NavigationIcon from '@mui/icons-material/Navigation';
 import { Transition } from 'react-transition-group';
 
 const { N, S, E, W } = Orientation;
-const NAVICON_DEFAULT_ORIENTATION = "rotate(0deg)"
 
 const transformNavigationIcon = (orientation: Orientation) => {
   switch(orientation) {
@@ -20,29 +19,31 @@ const transformNavigationIcon = (orientation: Orientation) => {
   }
 }
 
-const Rover = ({ roverOrientation }: any) => {
+const Rover = ({ rover }: any) => {
   const [animate, setAnimate] = useState(false);
   const nodeRef = useRef(null);
-  const duration = 2000;
-  const navIconOrientation = transformNavigationIcon(roverOrientation)
+  const duration = 1000;
+  const roverOrientation = rover.orientation;
+  const prevNavIconOrientation = transformNavigationIcon(rover.status.previous.orientation);
+  const navIconOrientation = transformNavigationIcon(roverOrientation);
   const defaultStyle = {
     transition: `transform ${duration}ms ease-in-out`,
-    transform: NAVICON_DEFAULT_ORIENTATION,
+    transform: navIconOrientation,
   }
 
   const transitionStyles = {
     entering: { transform: navIconOrientation },
     entered:  { transform: navIconOrientation },
-    exiting:  { transform: NAVICON_DEFAULT_ORIENTATION },
-    exited:  { transform: NAVICON_DEFAULT_ORIENTATION },
-    unmounted: { transform: NAVICON_DEFAULT_ORIENTATION },
+    exiting:  { transform: prevNavIconOrientation },
+    exited:  { transform: prevNavIconOrientation },
+    unmounted: { transform: prevNavIconOrientation },
   };
 
   useEffect(() => {
-    if (roverOrientation) {
+    if (prevNavIconOrientation && navIconOrientation) {
       setAnimate(true);
     }
-  }, [roverOrientation])
+  }, [prevNavIconOrientation, navIconOrientation])
 
   return (
     <Transition

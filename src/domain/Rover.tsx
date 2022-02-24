@@ -20,6 +20,12 @@
          orientation: Orientation
      };
      instructions: string[];
+     status: {
+       previous: {
+         orientation: Orientation,
+         position: Point
+       }
+     };
  
      /**
       * Set rover name, data where to land, instructions how to navigate plateau
@@ -34,6 +40,7 @@
          this.name = name;
          this.landing = landing;
          this.instructions = instructions;
+         this.status = { previous: { orientation: Orientation.N, position: null as any }};
      }
  
      landOn(plateau: Plateau): void {
@@ -62,7 +69,17 @@
          return this.getStatus();
      }
 
+     logHistory() {
+       this.status = {
+         previous: {
+          orientation: this.orientation,
+          position: this.position
+         }
+       }
+     }
+
      execute(instruction: Instruction, plateau: Plateau) {
+      this.logHistory();
       switch (instruction) {
         case Instruction.L:
             this.turnLeft();

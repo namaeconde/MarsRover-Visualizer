@@ -30,6 +30,7 @@ import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
+import Instruction from './domain/Instruction';
 
 const DEFAULT_WIDTH = 5
 const DEFAULT_HEIGHT = 5
@@ -94,8 +95,8 @@ const App = () => {
     try {
       const landing = { position: landingCoordinates, orientation: orientation };
       const newRover = new Rover(name, landing, instructions.split(""));
-      setRover(newRover);
       newRover.landOn(plateau);
+      setRover(newRover);
       handleDialogClose();
       clearRoverInputs();
     } catch(error) {
@@ -105,12 +106,22 @@ const App = () => {
     }
   }
 
-  const runRover = () => {
-    rover?.navigateOn(plateau);
-    const newRoverStatus = new Rover(rover.name, rover.landing, []);
-    newRoverStatus.position = rover.position;
-    newRoverStatus.orientation = rover.orientation;
-    setRover(newRoverStatus);
+  const runRover = () => { 
+    // Update rover position based on instruction
+    rover.instructions.map((instruction: string, idx: number) => {
+      setTimeout(() => {
+        try {
+          rover.execute(instruction as Instruction, plateau);
+          setRover({...rover} as Rover);
+        } catch(error) {
+          console.log((error as Error).message);
+          setErrorMessage((error as Error).message)
+          setAlertOpen(true);
+        }
+      }, idx * 1000);
+
+      return rover.getStatus()
+    });
   }
 
   const clearRoverInputs = () => {
@@ -160,8 +171,29 @@ const App = () => {
           </Box>
         </Container>
       </AppBar>
+      <Box sx={{ width: '100%' }}>
+          <Collapse in={alertOpen}>
+            <Alert
+              severity="error"
+              action={
+                <IconButton
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setAlertOpen(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mb: 2 }}
+            >
+              {errorMessage}
+            </Alert>
+          </Collapse>
+        </Box>
       <Terrain plateau={plateau} rover={rover}/>
-      <Tooltip title="Deploy rover">
+      <Tooltip title={ rover == null ? "Deploy rover" : "Run rover run!"}>
         <Fab color="primary" 
           sx={{ position: 'fixed', bottom: 20, right: 20 }} 
           onClick={ rover === null ? handleDialogOpen : runRover }>
@@ -174,27 +206,6 @@ const App = () => {
       <Dialog disableEscapeKeyDown open={dialogOpen} onClose={handleDialogClose}>
         <DialogTitle>Rover Landing Properties</DialogTitle>
         <DialogContent>
-          <Box sx={{ width: '100%' }}>
-            <Collapse in={alertOpen}>
-              <Alert
-                severity="error"
-                action={
-                  <IconButton
-                    color="inherit"
-                    size="small"
-                    onClick={() => {
-                      setAlertOpen(false);
-                    }}
-                  >
-                    <CloseIcon fontSize="inherit" />
-                  </IconButton>
-                }
-                sx={{ mb: 2 }}
-              >
-                {errorMessage}
-              </Alert>
-            </Collapse>
-          </Box>
           <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', alignItems:"center" }}>
               <FormControl sx={{ m: 1, minWidth: 120 }}>
                 <TextField
