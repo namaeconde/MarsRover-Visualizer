@@ -18,8 +18,8 @@
      landing: {
          position: Point,
          orientation: Orientation
-     }
-     instructions: string[]
+     };
+     instructions: string[];
  
      /**
       * Set rover name, data where to land, instructions how to navigate plateau
@@ -57,21 +57,25 @@
  
          // Update rover position based on instruction
          this.instructions.map((instruction) => {
-             switch (instruction) {
-                 case Instruction.L:
-                     this.turnLeft();
-                     break;
-                 case Instruction.R:
-                     this.turnRight();
-                     break;
-                 case Instruction.M:
-                     this.move(plateau);
-                     break;
-                 default:
-                     break;
-             }
+          this.execute(instruction as Instruction, plateau)
          })
          return this.getStatus();
+     }
+
+     execute(instruction: Instruction, plateau: Plateau) {
+      switch (instruction) {
+        case Instruction.L:
+            this.turnLeft();
+            break;
+        case Instruction.R:
+            this.turnRight();
+            break;
+        case Instruction.M:
+            this.move(plateau);
+            break;
+        default:
+            break;
+      }
      }
  
      turnLeft(): Orientation {
